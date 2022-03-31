@@ -1,4 +1,3 @@
-#[allow(dead_code)]
 struct Point2 {
     x: f32,
     y: f32,
@@ -23,10 +22,19 @@ impl Function {
         match notation {
             Notation::IversonBracket => match self.vertex {
                 Some(_vertex) => {
-                    println!("quadratic_function * [{} <= x <= {}] +", self.start.x, self.end.x);
+                    println!(
+                        "quadratic_function * [{} <= x <= {}] +",
+                        self.start.x, self.end.x
+                    );
                 }
                 None => {
-                    println!("linerar_function * [{} <= x <= {}] +", self.start.x, self.end.x);
+                    let func = ((self.end.y - self.start.y) / (self.end.x - self.start.x))
+                        .to_string()
+                        + " * (x - "
+                        + &self.start.x.to_string()
+                        + ") + "
+                        + &self.start.y.to_string();
+                    println!("{} * [{} <= x <= {}] +", func, self.start.x, self.end.x);
                 }
             },
         }
