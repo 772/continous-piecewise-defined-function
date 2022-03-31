@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 struct Point2 {
     x: f32,
     y: f32,
@@ -13,52 +14,67 @@ struct Function {
     end: Point2,
 }
 
+enum Notation {
+    IversonBracket,
+}
+
 impl Function {
-    fn print(self) {
-        match self.vertex {
-            Some(vertex) => {
-                println!(
-                    "({}|{}) ---> ({}|{}) ---> ({}|{})",
-                    self.start.x, self.start.x, vertex.x, vertex.y, self.end.x, self.end.y
-                );
-            }
-            None => {
-                println!(
-                    "({}|{}) ---> ({}|{})",
-                    self.start.x, self.start.x, self.end.x, self.end.y
-                );
-            }
+    fn print(self, notation: &Notation) {
+        match notation {
+            Notation::IversonBracket => match self.vertex {
+                Some(_vertex) => {
+                    println!("quadratic_function * [{} <= x <= {}] +", self.start.x, self.end.x);
+                }
+                None => {
+                    println!("linerar_function * [{} <= x <= {}] +", self.start.x, self.end.x);
+                }
+            },
         }
     }
 }
 
 impl PiecewiseDefinedFunction {
-    fn print(self) {
+    fn print(self, notation: &Notation) {
         for function in self.function {
-            function.print();
+            function.print(notation);
         }
     }
 }
 
 fn main() {
-    let mut piecewise_defined_function = PiecewiseDefinedFunction { function: vec![] };
-    let func1 = Function {
-        start: Point2 { x: 0.0, y: 0.0 },
-        vertex: None,
-        end: Point2 { x: -20.0, y: 0.0 },
+    let a_different_step_function = PiecewiseDefinedFunction {
+        function: vec![
+            Function {
+                start: Point2 { x: 0.0, y: 0.0 },
+                vertex: Some(Point2 { x: 5.0, y: 20.0 }),
+                end: Point2 { x: 10.0, y: 0.0 },
+            },
+            Function {
+                start: Point2 { x: 10.0, y: 0.0 },
+                vertex: None,
+                end: Point2 { x: 20.0, y: 10.0 },
+            },
+            Function {
+                start: Point2 { x: 20.0, y: 10.0 },
+                vertex: Some(Point2 { x: 25.0, y: 15.0 }),
+                end: Point2 { x: 30.0, y: 10.0 },
+            },
+            Function {
+                start: Point2 { x: 30.0, y: 10.0 },
+                vertex: None,
+                end: Point2 { x: 40.0, y: 20.0 },
+            },
+            Function {
+                start: Point2 { x: 40.0, y: 20.0 },
+                vertex: Some(Point2 { x: 45.0, y: 25.0 }),
+                end: Point2 { x: 50.0, y: 20.0 },
+            },
+            Function {
+                start: Point2 { x: 50.0, y: 20.0 },
+                vertex: None,
+                end: Point2 { x: 60.0, y: 30.0 },
+            },
+        ],
     };
-    let func2 = Function {
-        start: Point2 { x: 0.0, y: 0.0 },
-        vertex: Some(Point2 { x: 10.0, y: 20.0 }),
-        end: Point2 { x: 20.0, y: 40.0 },
-    };
-    let func3 = Function {
-        start: Point2 { x: 0.0, y: 0.0 },
-        vertex: None,
-        end: Point2 { x: 1.0, y: 0.0 },
-    };
-    piecewise_defined_function.function.push(func1);
-    piecewise_defined_function.function.push(func2);
-    piecewise_defined_function.function.push(func3);
-    piecewise_defined_function.print();
+    a_different_step_function.print(&Notation::IversonBracket);
 }
