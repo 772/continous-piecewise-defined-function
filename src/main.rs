@@ -83,6 +83,25 @@ fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
 }
 
 impl Function {
+    fn new(x1: f32, y1: f32, x2: f32, y2: f32, vertex: f32) -> Function {
+        if hgt == 0.0 {
+            Function {
+                start: Point2 { x: x1, y: y1 },
+                stopover: None,
+                end: Point2 { x: x2, y: y2 },
+            }
+        } else {
+            Function {
+                start: Point2 { x: x1, y: y1 },
+                stopover: Some(Point2 {
+                    x: x1 + (x2 - x1) / 2.0,
+                    y: y1 + (y2 - y1) / 2.0 + hgt,
+                }),
+                end: Point2 { x: x2, y: y2 },
+            }
+        }
+    }
+
     fn print(self, notation: &Notation) {
         match self.stopover {
             Some(stopover) => {
@@ -136,36 +155,12 @@ impl PiecewiseDefinedFunction {
 fn main() {
     let a_different_step_function = PiecewiseDefinedFunction {
         function: vec![
-            Function {
-                start: Point2 { x: 0.0, y: 0.0 },
-                stopover: Some(Point2 { x: 5.0, y: 5.0 }),
-                end: Point2 { x: 10.0, y: 0.0 },
-            },
-            Function {
-                start: Point2 { x: 10.0, y: 0.0 },
-                stopover: None,
-                end: Point2 { x: 20.0, y: 10.0 },
-            },
-            Function {
-                start: Point2 { x: 20.0, y: 10.0 },
-                stopover: Some(Point2 { x: 25.0, y: 15.0 }),
-                end: Point2 { x: 30.0, y: 10.0 },
-            },
-            Function {
-                start: Point2 { x: 30.0, y: 10.0 },
-                stopover: None,
-                end: Point2 { x: 40.0, y: 20.0 },
-            },
-            Function {
-                start: Point2 { x: 40.0, y: 20.0 },
-                stopover: Some(Point2 { x: 45.0, y: 25.0 }),
-                end: Point2 { x: 50.0, y: 20.0 },
-            },
-            Function {
-                start: Point2 { x: 50.0, y: 20.0 },
-                stopover: None,
-                end: Point2 { x: 60.0, y: 30.0 },
-            },
+            Function::new(0.0, 0.0, 10.0, 0.0, 5.0),
+            Function::new(10.0, 0.0, 20.0, 10.0, 0.0),
+            Function::new(20.0, 10.0, 30.0, 10.0, 5.0),
+            Function::new(30.0, 10.0, 40.0, 20.0, 0.0),
+            Function::new(40.0, 20.0, 50.0, 20.0, 5.0),
+            Function::new(50.0, 20.0, 60.0, 30.0, 0.0),
         ],
     };
     a_different_step_function.print(&Notation::ZeroToThePowerOfZeroIsOneDesmos);
