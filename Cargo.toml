@@ -1,6 +1,6 @@
 [package]
 name = "piecewise-defined-function"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Armin Schäfer"]
 license-file = "LICENSE"
 edition = "2021"
