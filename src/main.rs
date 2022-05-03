@@ -22,7 +22,7 @@ enum Notation {
 fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
     match notation {
         Notation::IversonBracket => {
-            String::from("[".to_string() + &x1.to_string() + " <= x <= " + &x2.to_string() + "]")
+            String::from("[".to_string() + &x1.to_string() + "<=x<=" + &x2.to_string() + "]")
         }
         Notation::ZeroToThePowerOfZeroIsOne => String::from(
             "(((1+(".to_owned()
@@ -32,7 +32,7 @@ fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
                 + &x1.to_string()
                 + ")^2+0^((x-"
                 + &x1.to_string()
-                + ")^2))^(1/2)*2)^2-1)/8) * (1-((1+(x-"
+                + ")^2))^(1/2)*2)^2-1)/8)*(1-((1+(x-"
                 + &x2.to_string()
                 + ")/((x-"
                 + &x2.to_string()
@@ -48,7 +48,7 @@ fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
                 + &x1.to_string()
                 + ")^2+0^{((x-"
                 + &x1.to_string()
-                + ")^2)})^{(1/2)}*2)^2-1)/8) * (1-((1+(x-"
+                + ")^2)})^{(1/2)}*2)^2-1)/8)*(1-((1+(x-"
                 + &x2.to_string()
                 + ")/((x-"
                 + &x2.to_string()
@@ -90,22 +90,16 @@ impl Function {
                     + x1 * (x3 * x3 * y2 - x2 * x2 * y3)
                     + x2 * x3 * y1 * (x2 - x3))
                     / ((x1 - x2) * (x1 - x3) * (x2 - x3));
-                print!(
-                    "({} * x^2 + {} * x + {}) * {} + ",
-                    a,
-                    b,
-                    c,
-                    knots(notation, x1, x3)
-                );
+                print!("({}*x^2+{}*x+{})*{}+", a, b, c, knots(notation, x1, x3));
             }
             // Linear.
             _ => {
                 let func = ((y3 - y1) / (x3 - x1)).to_string()
-                    + " * (x - "
+                    + "*(x-"
                     + &x1.to_string()
-                    + ") + "
+                    + ")+"
                     + &y1.to_string();
-                print!("({}) * {} + ", func, knots(notation, x1, x3));
+                print!("({})*{}+", func, knots(notation, x1, x3));
             }
         }
     }
@@ -119,6 +113,7 @@ impl PiecewiseDefinedFunction {
         println!("0");
     }
 
+	#[allow(dead_code)]
     fn append(mut self, piecewise_defined_function: &PiecewiseDefinedFunction) {
         let x = self.functions.last().unwrap().x2;
         for function in &piecewise_defined_function.functions {
