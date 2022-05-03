@@ -1,16 +1,13 @@
-struct Point2 {
-    x: f32,
-    y: f32,
-}
-
 struct PiecewiseDefinedFunction {
-    function: Vec<Function>,
+    functions: Vec<Function>,
 }
 
 struct Function {
-    start: Point2,
-    stopover: Option<Point2>,
-    end: Point2,
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    vertex: f32,
 }
 
 #[allow(dead_code)]
@@ -18,6 +15,8 @@ enum Notation {
     IversonBracket,
     ZeroToThePowerOfZeroIsOne,
     ZeroToThePowerOfZeroIsOneDesmos,
+    SVGPath,
+    Poles,
 }
 
 fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
@@ -79,38 +78,32 @@ fn knots(notation: &Notation, x1: f32, x2: f32) -> String {
                 + &x2.to_string()
                 + ")^2)})^{(1/2)}*2)^2-1)/8)",
         ),
+        Notation::SVGPath => String::from(""),
+        Notation::Poles => String::from(""),
     }
 }
 
 impl Function {
     fn new(x1: f32, y1: f32, x2: f32, y2: f32, vertex: f32) -> Function {
-        if hgt == 0.0 {
-            Function {
-                start: Point2 { x: x1, y: y1 },
-                stopover: None,
-                end: Point2 { x: x2, y: y2 },
-            }
-        } else {
-            Function {
-                start: Point2 { x: x1, y: y1 },
-                stopover: Some(Point2 {
-                    x: x1 + (x2 - x1) / 2.0,
-                    y: y1 + (y2 - y1) / 2.0 + hgt,
-                }),
-                end: Point2 { x: x2, y: y2 },
-            }
+        Function {
+            x1,
+            y1,
+            x2,
+            y2,
+            vertex,
         }
     }
 
     fn print(self, notation: &Notation) {
-        match self.stopover {
-            Some(stopover) => {
-                let x1 = self.start.x;
-                let x2 = stopover.x;
-                let x3 = self.end.x;
-                let y1 = self.start.y;
-                let y2 = stopover.y;
-                let y3 = self.end.y;
+		let x1 = self.x1;
+		let y1 = self.y1;
+		let x2 = self.x1 + (self.x2 - self.x1) / 2.0;
+		let y2 = self.y1 + (self.y2 - self.y1) / 2.0 + self.vertex;
+		let x3 = self.x2;
+		let y3 = self.y2;
+        match self.vertex {
+			// Linear.
+            0.0 => {
                 let a = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
                     / ((x1 - x2) * (x1 - x3) * (x3 - x2));
                 let b = (x1 * x1 * (y2 - y3) + x2 * x2 * (y3 - y1) + x3 * x3 * (y1 - y2))
@@ -127,16 +120,17 @@ impl Function {
                     knots(notation, x1, x3)
                 );
             }
-            None => {
-                let func = ((self.end.y - self.start.y) / (self.end.x - self.start.x)).to_string()
+            // Quadratic.
+            _ => {
+                let func = ((y3 - y1) / (x3 - x1)).to_string()
                     + " * (x - "
-                    + &self.start.x.to_string()
+                    + &x1.to_string()
                     + ") + "
-                    + &self.start.y.to_string();
+                    + &y1.to_string();
                 print!(
                     "({}) * {} + ",
                     func,
-                    knots(notation, self.start.x, self.end.x)
+                    knots(notation, x1, x3)
                 );
             }
         }
@@ -145,16 +139,29 @@ impl Function {
 
 impl PiecewiseDefinedFunction {
     fn print(self, notation: &Notation) {
-        for function in self.function {
+        for function in self.functions {
             function.print(notation);
         }
         println!("0");
+    }
+
+    fn append(mut self, piecewise_defined_function: &PiecewiseDefinedFunction) {
+        let x = self.functions.last().unwrap().x2;
+        for function in &piecewise_defined_function.functions {
+            self.functions.push(Function::new(
+                function.x1 + x,
+                function.y1,
+                function.x2 + x,
+                function.y2,
+                function.vertex,
+            ));
+        }
     }
 }
 
 fn main() {
     let a_different_step_function = PiecewiseDefinedFunction {
-        function: vec![
+        functions: vec![
             Function::new(0.0, 0.0, 10.0, 0.0, 5.0),
             Function::new(10.0, 0.0, 20.0, 10.0, 0.0),
             Function::new(20.0, 10.0, 30.0, 10.0, 5.0),
@@ -165,3 +172,6 @@ fn main() {
     };
     a_different_step_function.print(&Notation::ZeroToThePowerOfZeroIsOneDesmos);
 }
+
+#[cfg(test)]
+mod tests {}
