@@ -1,6 +1,6 @@
 # piecewise-defined-function
 
-This is an crate allows one to easily create, combine and print piecewise-defined functions that consist of linear and quadratic equations. When printing a piecewise-defined function, many notations are available, for example Iverson brackets.
+This dependency-less crate can create and combine piecewise-defined functions that consist of linear and quadratic equations or print them out via many notations, e. g. Iverson brackets. 
 
 ## Example
 
