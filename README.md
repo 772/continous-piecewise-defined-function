@@ -1,12 +1,12 @@
 # piecewise-defined-function
 
-This is an experimental tool to create piecewise-defined functions that contain only linear and quadratic equations.
+This is an crate allows one to easily create, combine and print piecewise-defined functions that consist of linear and quadratic equations. When printing a piecewise-defined function, many notations are available, for example Iverson brackets.
 
 ## Example
 
 ```
 let a_different_step_function = PiecewiseDefinedFunction {
-	function: vec![
+	functions: vec![
 		Function::new(0.0, 0.0, 10.0, 0.0, 5.0),
 		Function::new(10.0, 0.0, 20.0, 10.0, 0.0),
 		Function::new(20.0, 10.0, 30.0, 10.0, 5.0),
