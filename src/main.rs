@@ -95,15 +95,15 @@ impl Function {
     }
 
     fn print(self, notation: &Notation) {
-		let x1 = self.x1;
-		let y1 = self.y1;
-		let x2 = self.x1 + (self.x2 - self.x1) / 2.0;
-		let y2 = self.y1 + (self.y2 - self.y1) / 2.0 + self.vertex;
-		let x3 = self.x2;
-		let y3 = self.y2;
+        let x1 = self.x1;
+        let y1 = self.y1;
+        let x2 = self.x1 + (self.x2 - self.x1) / 2.0;
+        let y2 = self.y1 + (self.y2 - self.y1) / 2.0 + self.vertex;
+        let x3 = self.x2;
+        let y3 = self.y2;
         match self.vertex {
-			// Linear.
-            0.0 => {
+            // Quadratic.
+            x if x != 0.0 => {
                 let a = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
                     / ((x1 - x2) * (x1 - x3) * (x3 - x2));
                 let b = (x1 * x1 * (y2 - y3) + x2 * x2 * (y3 - y1) + x3 * x3 * (y1 - y2))
@@ -120,18 +120,14 @@ impl Function {
                     knots(notation, x1, x3)
                 );
             }
-            // Quadratic.
+            // Linear.
             _ => {
                 let func = ((y3 - y1) / (x3 - x1)).to_string()
                     + " * (x - "
                     + &x1.to_string()
                     + ") + "
                     + &y1.to_string();
-                print!(
-                    "({}) * {} + ",
-                    func,
-                    knots(notation, x1, x3)
-                );
+                print!("({}) * {} + ", func, knots(notation, x1, x3));
             }
         }
     }
