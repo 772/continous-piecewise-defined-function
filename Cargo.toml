@@ -1,9 +1,9 @@
 [package]
-name = "piecewise-defined-function"
+name = "continous-piecewise-defined-function"
 version = "0.1.2"
 authors = ["Armin Schäfer"]
 license-file = "LICENSE"
-description = "This dependency-less crate can create and combine piecewise-defined functions that consist of linear and quadratic equations or print them out via many notations, e. g. Iverson brackets."
+description = "This dependency-less crate can create and combine continous piecewise-defined functions that consist of linear and quadratic equations or print them out via many notations, e. g. Iverson brackets."
 repository = "https://github.com/772/piecewise-defined-function/"
 readme = "README.md"
 edition = "2021"
